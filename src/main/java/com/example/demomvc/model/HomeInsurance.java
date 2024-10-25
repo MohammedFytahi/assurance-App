@@ -11,5 +11,36 @@ public class HomeInsurance extends Quote {
     private boolean isInRiskZone;
     private boolean hasSecuritySystem;
 
-    // Getters and Setters
+
+
+    public double calculateQuote() {
+        double basePrice = 300.0;
+
+
+        if (propertyType.equalsIgnoreCase("maison")) {
+            basePrice += basePrice * 0.02;
+        }
+
+
+        if (isInRiskZone) {
+            basePrice += basePrice * 0.05;
+        }
+
+
+        if (propertyValue > 200000) {
+            basePrice += basePrice * 0.10;
+        }
+
+
+        if (hasSecuritySystem) {
+            basePrice -= basePrice * 0.15;
+        } else {
+            basePrice += basePrice * 0.15;
+        }
+
+
+        setAmount(basePrice);
+
+        return basePrice;
+    }
 }

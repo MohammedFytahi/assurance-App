@@ -26,11 +26,16 @@ public class UserService {
     }
 
     public boolean authenticateUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
+        User user = findByEmail(email);
         if (user != null) {
-            return passwordEncoder.matches(password, user.getPassword());
+            System.out.println("Mot de passe en base : " + user.getPassword());
+            System.out.println("Mot de passe saisi : " + password);
+            boolean isMatch = passwordEncoder.matches(password, user.getPassword());
+            System.out.println("Les mots de passe correspondent : " + isMatch);
+            return isMatch;
         }
         return false;
     }
+
 
 }
