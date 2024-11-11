@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -17,7 +19,6 @@ public class UserService {
 
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        System.out.println("User details: " + user);
         return userRepository.save(user);
     }
 
@@ -28,14 +29,13 @@ public class UserService {
     public boolean authenticateUser(String email, String password) {
         User user = findByEmail(email);
         if (user != null) {
-            System.out.println("Mot de passe en base : " + user.getPassword());
-            System.out.println("Mot de passe saisi : " + password);
-            boolean isMatch = passwordEncoder.matches(password, user.getPassword());
-            System.out.println("Les mots de passe correspondent : " + isMatch);
-            return isMatch;
+            return passwordEncoder.matches(password, user.getPassword());
         }
         return false;
     }
 
-
+    public User findById(Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.orElse(null); // Retourne l'utilisateur ou null s'il n'existe pas
+    }
 }
