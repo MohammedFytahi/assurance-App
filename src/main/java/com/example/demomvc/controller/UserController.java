@@ -1,6 +1,7 @@
     package com.example.demomvc.controller;
 
     import com.example.demomvc.model.User;
+    import com.example.demomvc.repository.UserRepository;
     import com.example.demomvc.service.UserService;
     import jakarta.servlet.http.HttpSession;
     import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,16 @@
     import org.springframework.web.bind.annotation.PostMapping;
     import org.springframework.web.bind.annotation.RequestParam;
 
+    import java.util.List;
+
     @Controller
     public class UserController {
 
         @Autowired
         private UserService userService;
+
+        @Autowired
+        private UserRepository userRepository;
 
         @GetMapping("/register")
         public String showRegistrationForm(Model model) {
@@ -38,19 +44,34 @@
         @PostMapping("/login")
         public String login(@RequestParam String email, @RequestParam String password, HttpSession session, Model model) {
             if (userService.authenticateUser(email, password)) {
-                session.setAttribute("user", email); // Set the user attribute in session
-                return "redirect:/home"; // Redirect to home or dashboard after login
+                User user = userService.findByEmail(email);
+                session.setAttribute("user", user);
+
+                 userService.registerActivity(user, "Connexion réussie");
+
+                return "redirect:/home"; // Redirige vers la page d'accueil
             } else {
-                model.addAttribute("error", true);
-                return "login"; // Show login page with error
+                model.addAttribute("error", "Email ou mot de passe incorrect");
+                return "login";
             }
         }
 
-
         @PostMapping("/logout")
         public String logout(HttpSession session) {
-            session.invalidate(); // Invalidate the session to log out the user
-            return "redirect:/login"; // Redirect to the login page
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                // Enregistrer l'activité de déconnexion
+                userService.registerActivity(user, "Déconnexion réussie");
+            }
+            session.invalidate(); // Invalider la session
+            return "redirect:/login"; // Redirige vers la page de connexion
+        }
+
+        @GetMapping("/admin/activity")
+        public String viewUserActivities(Model model) {
+            List<User> users = userRepository.findAll();
+            model.addAttribute("users", users);
+            return "activity_log";
         }
 
     }

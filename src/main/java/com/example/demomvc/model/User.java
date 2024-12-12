@@ -1,5 +1,7 @@
 package com.example.demomvc.model;
 
+import com.example.demomvc.enums.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,13 +17,17 @@ public class User {
     private String address;
     private String email;
     private String phone;
+
+    @JsonIgnore // Exclut le mot de passe des réponses JSON
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Quote> quotes;
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Contract> contracts;
+    private List<ActivityLog> activityLogs;
+
+
 
     public Long getId() {
         return id;
@@ -71,20 +77,19 @@ public class User {
         this.password = password;
     }
 
-    public List<Quote> getQuotes() {
-        return quotes;
+    public Role getRole() {
+        return role;
     }
 
-    public void setQuotes(List<Quote> quotes) {
-        this.quotes = quotes;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
-    public List<Contract> getContracts() {
-        return contracts;
+    public List<ActivityLog> getActivityLogs() {
+        return activityLogs;
     }
 
-    public void setContracts(List<Contract> contracts) {
-        this.contracts = contracts;
+    public void setActivityLogs(List<ActivityLog> activityLogs) {
+        this.activityLogs = activityLogs;
     }
-// Getters and Setters
 }

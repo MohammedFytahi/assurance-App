@@ -35,10 +35,10 @@ public class JpaConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.example.demomvc.model"); // Assurez-vous que cela correspond au package de vos entités
+        em.setPackagesToScan("com.example.demomvc.model");
         em.setPersistenceProvider(new HibernatePersistenceProvider());
 
-        // Configuration des propriétés Hibernate
+
         Properties hibernateProperties = new Properties();
         hibernateProperties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         hibernateProperties.put("hibernate.show_sql", "true");
