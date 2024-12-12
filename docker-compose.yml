@@ -1,0 +1,21 @@
+version: '3'
+services:
+  assurance-app:
+    image: assurance-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/assurance_db
+      SPRING_DATASOURCE_USERNAME: user
+      SPRING_DATASOURCE_PASSWORD: password
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: assurance_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
